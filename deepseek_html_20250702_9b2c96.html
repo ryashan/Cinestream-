@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="monetag" content="aa9a5b45a337ef16e956554d21f1c785">
+    <title>CineStream - Unlimited Movie Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #e50914;
+            --dark: #141414;
+            --light: #f4f4f4;
+            --gray: #808080;
+            --dark-gray: #333;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #000;
+            color: var(--light);
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+            padding: 20px 50px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        header.scrolled {
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 5px 10px;
+        }
+        
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            padding: 8px;
+            width: 200px;
+            outline: none;
+        }
+        
+        .search-container button {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-actions .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .user-actions .btn:hover {
+            background: #f40612;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/random/1920x1080/?cinema') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+        }
+        
+        .hero-content {
+            max-width: 650px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--light);
+            opacity: 0.9;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-play {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .btn-play i {
+            margin-right: 10px;
+        }
+        
+        .btn-play:hover {
+            background: #f40612;
+            transform: scale(1.05);
+        }
+        
+        .btn-more {
+            background: rgba(109, 109, 110, 0.7);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .btn-more:hover {
+            background: rgba(109, 109, 110, 0.9);
+            transform: scale(1.05);
+        }
+        
+        /* Movie Sections */
+        .movie-section {
+            padding: 50px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .movie-row {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        
+        .movie-row::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .movie-card {
+            min-width: 250px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        .movie-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 15px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .movie-card:hover .movie-info {
+            opacity: 1;
+        }
+        
+        .movie-info h3 {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .movie-info .rating {
+            color: gold;
+            margin-bottom: 5px;
+        }
+        
+        .movie-info .genres {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-gray);
+            padding: 40px 50px 20px;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .social-icons a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            header {
+                padding: 20px 30px;
+            }
+            
+            .hero {
+                padding: 0 30px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .movie-section {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            header {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .search-container input {
+                width: 120px;
+            }
+            
+            .hero {
+                padding: 0 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .movie-section {
+                padding: 15px;
+            }
+            
+            .movie-card {
+                min-width: 180px;
+            }
+            
+            .movie-card img {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header id="header">
+        <a href="#" class="logo"><i class="fas fa-film"></i>CineStream</a>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">TV Shows</a></li>
+                <li><a href="#">New & Popular</a></li>
+                <li><a href="#">My List</a></li>
+            </ul>
+        </nav>
+        <div class="search-container">
+            <input type="text" placeholder="Search...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="user-actions">
+            <button class="btn"><i class="fas fa-user"></i> Sign In</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Unlimited Movies, TV Shows, and More.</h1>
+            <p>Watch anywhere. Cancel anytime. Ready to watch? Enter your email to create or restart your membership.</p>
+            <div class="hero-buttons">
+                <button class="btn-play"><i class="fas fa-play"></i> Play</button>
+                <button class="btn-more"><i class="fas fa-info-circle"></i> More Info</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movie Sections -->
+    <section class="movie-section">
+        <h2 class="section-title">Popular on CineStream</h2>
+        <div class="movie-row">
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?action,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Action Hero</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.5/10
+                    </div>
+                    <div class="genres">Action, Adventure</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?sci-fi,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Space Odyssey</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 9.0/10
+                    </div>
+                    <div class="genres">Sci-Fi, Adventure</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?comedy,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Funny Times</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 7.8/10
+                    </div>
+                    <div class="genres">Comedy, Romance</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?drama,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Drama Queen</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.2/10
+                    </div>
+                    <div class="genres">Drama, Romance</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?fantasy,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Fantasy World</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.7/10
+                    </div>
+                    <div class="genres">Fantasy, Adventure</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="movie-section">
+        <h2 class="section-title">Trending Now</h2>
+        <div class="movie-row">
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?thriller,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Dark Secrets</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.1/10
+                    </div>
+                    <div class="genres">Thriller, Mystery</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?horror,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Nightmare</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 7.5/10
+                    </div>
+                    <div class="genres">Horror, Thriller</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?animation,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Animated Journey</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.9/10
+                    </div>
+                    <div class="genres">Animation, Family</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?documentary,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Wild Nature</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.4/10
+                    </div>
+                    <div class="genres">Documentary</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?superhero,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Superhero Saga</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.6/10
+                    </div>
+                    <div class="genres">Action, Adventure</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="movie-section">
+        <h2 class="section-title">New Releases</h2>
+        <div class="movie-row">
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?new,movie" alt="Movie">
+                <div class="movie-info">
+                    <h3>Breaking Point</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.3/10
+                    </div>
+                    <div class="genres">Action, Thriller</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?new,film" alt="Movie">
+                <div class="movie-info">
+                    <h3>Summer Love</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 7.9/10
+                    </div>
+                    <div class="genres">Romance, Drama</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?new,cinema" alt="Movie">
+                <div class="movie-info">
+                    <h3>Tech Revolution</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.7/10
+                    </div>
+                    <div class="genres">Documentary, History</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?new,action" alt="Movie">
+                <div class="movie-info">
+                    <h3>Under Siege</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 7.6/10
+                    </div>
+                    <div class="genres">Action, War</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img src="https://source.unsplash.com/random/500x750/?new,comedy" alt="Movie">
+                <div class="movie-info">
+                    <h3>Family Matters</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> 8.0/10
+                    </div>
+                    <div class="genres">Comedy, Drama</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Account</a></li>
+                    <li><a href="#">Media Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Preferences</a></li>
+                    <li><a href="#">Corporate Information</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 CineStream. All Rights Reserved. This is a demo site for educational purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Movie card hover effect
+        const movieCards = document.querySelectorAll('.movie-card');
+        movieCards.forEach(card => {
+            card.addEventListener('mouseover', () => {
+                card.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseout', () => {
+                card.style.zIndex = '1';
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-container input');
+        searchInput.addEventListener('focus', () => {
+            document.querySelector('.search-container').style.background = 'rgba(255, 255, 255, 0.2)';
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            document.querySelector('.search-container').style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+    </script>
+</body>
+</html>
